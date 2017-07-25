@@ -1,7 +1,7 @@
 (set-env!
  :source-paths #{"src"}
  :resource-paths #{"assets"}
- :dependencies '[[org.clojure/clojure         "1.8.0"]
+ :dependencies '[[org.clojure/clojure "1.8.0"]
                  [adzerk/boot-cljs "2.1.0-SNAPSHOT" :scope "test"]
                  [powerlaces/boot-figreload "0.1.1-SNAPSHOT" :scope "test"]
 
@@ -17,8 +17,9 @@
                  [org.clojure/tools.nrepl "0.2.13" :scope "test"]
 
                  ;; App deps
-                 [org.clojure/clojurescript "1.9.562"  :scope "test"]
-                 [prismatic/dommy "1.1.0" :scope "test"]])
+                 [org.clojure/clojurescript "1.9.562"]
+                 [hoplon "7.0.2"]])
+                 
 
 (task-options! pom {:project "figreload-demo"
                     :version "0.1.0-SNAPSHOT"
@@ -32,6 +33,7 @@
          '[adzerk.boot-cljs-repl         :refer [cljs-repl]]
          '[powerlaces.boot-figreload     :refer [reload]]
          '[crisptrutski.boot-cljs-test   :refer [exit! test-cljs]]
+         '[hoplon.boot-hoplon            :refer [hoplon prerender]]
          '[powerlaces.boot-cljs-devtools :refer [dirac cljs-devtools]]
          '[pandeiro.boot-http            :refer [serve]])
 
@@ -50,8 +52,10 @@
         (watch)
         (notify)
         (cljs-devtools)
+        (hoplon)
         (reload :client-opts {:debug true}
-                :asset-path "/public") ;; Deprecated
+                :asset-path "/public" ;; Deprecated
+                :on-jsload 'figreload-demo.index/on-js-reload) ;; Deprecated
         (if-not with-dirac
           (cljs-repl)
           (dirac))
